@@ -1,0 +1,16 @@
+
+ state =  [   VALS     EXPRESSION-stack ]
+ vals are the SIX numbers in the countdown tv show
+ if a value is picked , removed from VALS list and put onto EXPRESSION stack
+ if no value is picked , one of four operators + - * / is picked and added to expression stack
+ hopefully this covers all possible 
+
+map-append.scm
+this version just uses function next
+ next simply picks one of the numbers from VALS and puts it onto expression stack 
+ once size of search space gets too big , keeping all data in memory at one time causes machine
+ to slow to  a crawl
+ so we switched to depth first search 
+
+recursive.scm
+ depth first search ... 

@@ -32,8 +32,8 @@
 (define pp pretty-print)
 (import srfi-69) ;; hash tables
 
-(import-for-syntax
- (only procedural-macros macro-rules with-renamed-symbols once-only expand*))
+;; (import-for-syntax
+;;  (only procedural-macros macro-rules with-renamed-symbols once-only expand*))
 
 
 ;; ------------ macros ---------------------------------------
@@ -83,8 +83,8 @@
   (er-macro-transformer
    (lambda (expression rename comparator)
      `(cond
-       ((>= (length ss) 2) (let ((a (car ss))
-				 (b (cadr ss)))
+       ((>= (length ss) 2) (let ((b (car ss))
+				 (a (cadr ss)))
 			     (set! ss (cons (+ a b)
 					    (cddr ss)))
 			     (foo (cdr xs))))
@@ -98,8 +98,8 @@
    (lambda (expression rename comparator)
   ;; - 
   `(cond
-     ((>= (length ss) 2) (let ((a (car ss))
-			       (b (cadr ss)))
+     ((>= (length ss) 2) (let ((b (car ss))
+			       (a (cadr ss)))
 			   (set! ss (cons (- a b)
 					  (cddr ss)))
 			   (foo (cdr xs))))
@@ -113,8 +113,8 @@
   
   ;;  * 
   `(cond
-     ((>= (length ss) 2) (let ((a (car ss))
-			       (b (cadr ss)))
+     ((>= (length ss) 2) (let ((b (car ss))
+			       (a (cadr ss)))
 			   (set! ss (cons (* a b)
 					  (cddr ss)))
 			   (foo (cdr xs))))
@@ -126,8 +126,8 @@
    (lambda (expression rename comparator)
   ;; / 
   `(cond
-     ((>= (length ss) 2) (let ((a (car ss))
-			       (b (cadr ss)))
+     ((>= (length ss) 2) (let ((b (car ss))
+			       (a (cadr ss)))
 			   (cond
 			    ((= b 0) (exit fail))
 			    (#t 
@@ -243,7 +243,7 @@ states -> all reachable next states
     ;;(format #t "s = ~A : len ~a ~%" s len)
     (set! attempts (+ 1 attempts))
     (cond
-     ((> len 12) ;; limit unbounded recursion
+     ((> len 11) ;; limit unbounded recursion
       #f)
      ((not no-underflow) #f)     
      (#t
@@ -270,6 +270,66 @@ states -> all reachable next states
   (format #t "~%there were ~a attempts in total ~%" attempts))
 
 
+;;; ----------- for compiler
+(run)
+
+#|
+
+;;---------------------------------------------------------------------
+with adjustments 2nd arg is on top stack , 1st arg is one under top of stack ,
+a   : tos
+
+b   : tos 
+a
+
++    
+
+(a+b) : top of stack 
+
+answer [1129 / 176617565] : solution (50 1 + 25 10 + * 7 / 3 *) : 765 
+answer [1130 / 176617655] : solution (50 1 + 25 10 + * 3 7 / *) : 765 
+answer [1131 / 176617734] : solution (50 1 + 25 10 + * 3 * 7 /) : 765 
+answer [1132 / 176621133] : solution (50 1 + 25 10 - *) : 765 
+answer [1133 / 176631382] : solution (50 1 + 25 7 3 + - *) : 765 
+answer [1134 / 176645262] : solution (50 1 + 25 7 - 3 - *) : 765 
+answer [1135 / 176657815] : solution (50 1 + 25 3 7 + - *) : 765 
+answer [1136 / 176671695] : solution (50 1 + 25 3 - 7 - *) : 765 
+answer [1137 / 177570917] : solution (50 1 * 10 - 7 * 25 - 3 *) : 765 
+answer [1138 / 178068238] : solution (50 1 / 10 - 7 * 25 - 3 *) : 765 
+
+there were 178219001 attempts in total 
+;; -----------------------------------------------------------------
+
+answer [1 / 369397] : solution (1 3 7 50 10 - * 25 - * *) : 765 
+(* (- (* 7 (- 50 10)) 25) 3)
+
+50
+7
+3
+1                                    
+
+
+*** above changed arguments around 2nd item on stack is 1st ? 
+this is ... well ...
+
+
+answer [1126 / 176488305] : solution (50 1 + 10 25 + 7 3 / * *) : 765 
+answer [1127 / 176488982] : solution (50 1 + 10 25 + 7 / 3 / *) : 765 
+answer [1128 / 176489087] : solution (50 1 + 10 25 + 7 / / 3 /) : 765 
+answer [1129 / 176491045] : solution (50 1 + 10 25 + * 7 3 / *) : 765 
+answer [1130 / 176491150] : solution (50 1 + 10 25 + * 7 / 3 /) : 765 
+answer [1131 / 176494713] : solution (50 1 + 10 25 - *) : 765 
+answer [1132 / 176607198] : solution (50 1 + 25 10 3 7 - * - *) : 765 
+answer [1133 / 176612737] : solution (50 1 + 25 10 + 7 3 / * *) : 765 
+answer [1134 / 176613414] : solution (50 1 + 25 10 + 7 / 3 / *) : 765 
+answer [1135 / 176613519] : solution (50 1 + 25 10 + 7 / / 3 /) : 765 
+answer [1136 / 176615477] : solution (50 1 + 25 10 + * 7 3 / *) : 765 
+answer [1137 / 176615582] : solution (50 1 + 25 10 + * 7 / 3 /) : 765 
+answer [1138 / 176656608] : solution (50 1 + 25 3 7 - 10 * - *) : 765 
+
+there were 178219001 attempts in total 
+|#
+
 
 
 ;; (define (stage-1) (next (entry)))
@@ -278,12 +338,6 @@ states -> all reachable next states
 ;; (define (stage-4) (apply append (map next (stage-3))))
 ;; (define (stage-5) (apply append (map next (stage-4))))
 ;; (define (stage-6) (apply append (map next (stage-5))))
-
-
-
-
-
-
 
 
 ;; s : states
@@ -307,9 +361,6 @@ states -> all reachable next states
 ;; 		 (let ((nes (cons op es)))
 ;; 		   (foo vals nes)))
 ;; 	 ))))
-
-	 
-
 
 ;; (list
 ;;  (without 1 '(1 3 7 10 25 50))

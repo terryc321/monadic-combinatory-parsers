@@ -1,6 +1,35 @@
 
 * Countdown puzzle 
 
+```lisp
+with six numbers 1 2 3 4 5 6 in forth postfix notation 
+1 2 3 4 5 6 +
+1 2 3 4 (5+6) +
+1 2 3 (4+5+6) +
+1 2 (3+4+5+6) +
+1 (2+3+4+5+6) +
+(1+2+3+4+5+6) 
+
+six numbers and five operators , max length of forth expression is eleven items 
+
+using this technique to randomly hope and spray operator or a value from six numbers
+
+...
+answer [1136 / 176671695] : solution (50 1 + 25 3 - 7 - *) : 765 
+answer [1137 / 177570917] : solution (50 1 * 10 - 7 * 25 - 3 *) : 765 
+answer [1138 / 178068238] : solution (50 1 / 10 - 7 * 25 - 3 *) : 765 
+
+there were 178219001 attempts in total 
+real	1m3.265s
+user	1m3.047s
+sys	0m0.216s
+
+```
+
+
+
+
+
 Haskell puzzle on a haskell (hutton nottingham university) youtube 
 
 From tv show countdown 
@@ -26,6 +55,7 @@ example in hutton video 1 , 3 , 7 , 10 , 25 , 50  and target 765
 * Ideas
 
 ```lisp
+
 #|
 
 countdown lisp
@@ -174,6 +204,10 @@ a b op c op
 - with four values the stack program can be this
 a b op c d op op
 a b op c op d op
+a b c d op op op
+
+the above are different in that 
+
 
 -------------------------------------------------------------------------
 
