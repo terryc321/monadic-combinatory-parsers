@@ -1,0 +1,119 @@
+
+
+;; ------------ macros ---------------------------------------
+;; ;; dolist
+;; (define-macro (%dolist varlist . body)
+;;   (let ((var (car varlist))
+;; 	(ls (cadr varlist))
+;; 	(fn (gensym "fn")))	
+;;     `(begin
+;;        (letrec
+;; 	   ((,fn (lambda (xs)
+;; 		   (cond
+;; 		    ((null? xs) #f)
+;; 		    (#t (let ((,var (car xs)))
+;; 			  ,@body
+;; 			  (,fn (cdr xs))))))))
+;; 	 (,fn ,ls)))))
+;; 
+;; ;; dofor
+;; ;; cannot handle decreasing steps ?
+;; (define-macro (%for v . body)
+;;   (let ((var (car v))
+;; 	(init (cadr v))
+;; 	(lim (caddr v))
+;; 	(step (cadddr v))	      
+;; 	(foo (gensym "foo"))
+;; 	(v-i (gensym "i"))
+;; 	(v-step (gensym "step"))
+;; 	(v-lim (gensym "lim")))
+;;     `(begin
+;;        (letrec ;; want to capture var
+;; 	   ((,foo (lambda (,var ,v-step ,v-lim)
+;; 		    (cond
+;; 		     ((> ,var ,v-lim) #f)
+;; 		     (#t
+;; 		      ,@body
+;; 		      (,foo (+ ,var ,v-step) ,v-step ,v-lim))))))
+;; 	 (,foo ,init ,step ,lim)))))
+;; 
+;; 
+;; (define-macro (%swap! x y)
+;;   (let ((tmp (gensym "tmp")))
+;;     `(begin
+;;        (set! ,tmp ,x)
+;;        (set! ,x ,y)
+;;        (set! ,y ,tmp))))
+;; 
+;; (define-macro (%inc! x)
+;;   `(set! ,x (+ ,x 1)))
+
+
+
+;; -------------------------------------------------------------------
+#|
+
+example 1 ;  -   1 3 7 10 25 50  target 765
+
+bug005 
+
+|#
+
+							     
+				      
+
+
+;; (when (or (not (member v state))
+;; 	       (not (member v2 state)))
+;;   (error "state corrupt!"))
+
+;; (display "s2 = ")
+;; (display s2)
+;; (display " : should NOT contain ")
+;; (display v)
+;; (newline)
+
+;; without only removes one item from s2
+;; so a product previous calculations could well be in s2
+;; (let ((a (sort (cons v s2) <))
+;; 	   (b (sort state <)))
+;;   (cond
+;; 	((not (equal? a b))
+;; 	 (display a)
+;; 	 (display b)
+;; 	 (newline)
+;; 	 (display "lost consistency - line 170 ")
+;; 	 (newline)
+;; 	 (error "lost consistency - line 170"))
+;; 	(#t
+;; 	 (display "ok .. 170 ")
+;; 	 (newline))))
+
+
+;; (when (member v s2)
+;;   (error "without v should not be in s2 "))
+
+;; (display "s3 = ")
+;; (display s3)
+;; (display " : should not contain ")
+;; (display v)
+;; (display " / ")
+;; (display v2)
+;; (newline)
+
+;; (when (not (equal? (sort (cons v (cons v2 s3)) <) (sort state <)))
+;;   (error "lost consistency - line 184 "))
+
+;; (when (member v s3)
+;;   (error "without v should not be in s3 "))
+;; 
+;; (when (member v2 s3)
+;;   (error "without v2 should not be in s3 "))
+
+;; (newline)
+;; (newline)
+
+				     
+;;---------------------------------------------------------------------------------------
+
+
